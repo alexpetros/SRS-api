@@ -1,0 +1,9 @@
+# build artifacts
+dist/
+node_modules/
+
+# OSX files
+.DS_Store
+
+# APIs
+.env
