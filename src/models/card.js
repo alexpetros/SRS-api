@@ -3,6 +3,8 @@ import mongoose, { Schema } from 'mongoose'
 const cardSchema = new Schema({
   content: { type: String, required: true },
   answer: { type: String, required: true },
+  image_url: String,
+  type: String,
   stack: String,
 })
 
