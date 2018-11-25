@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import * as Cards from './controllers/card-controller'
-
+import * as Users from './controllers/user-controller'
 
 const router = Router()
 
@@ -13,6 +13,15 @@ router.get('/', (req, res) => {
   })
 })
 
-// your routes will go here
+
+router.post('/user', (req, res) => {
+  const { email } = req.body
+
+  Users.createNewUser(email).then((user) => {
+    res.json({
+      user,
+    })
+  })
+})
 
 export default router

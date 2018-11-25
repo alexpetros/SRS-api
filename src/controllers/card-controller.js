@@ -9,3 +9,4 @@ export const getNextCard = (id) => {
 export const hasNextCard = () => {
   return true
 }
+

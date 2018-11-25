@@ -40,8 +40,8 @@ A future `yarn deploy` should push to heroku.
     - answer
     - type
     - stack
-    - image_url
+    - imageUrl
 * history
-    - userID
-    - cardID
+    - userId
+    - cardId
     - nextDate (sort on this)
