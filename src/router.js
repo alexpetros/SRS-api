@@ -4,24 +4,31 @@ import * as Users from './controllers/user-controller'
 
 const router = Router()
 
-router.get('/', (req, res) => {
-  Cards.getNextCard().then((card) => {
-    res.json({
-      message: 'SRS api',
-      card,
+router.post('/', (req, res) => {
+  const { username } = req.body
+
+  Users.createNewUser(username)
+    .then((user) => {
+      res.json({ user })
     })
+})
+
+router.get('/:user', (req, res) => {
+  const username = req.params.user
+
+  Cards.getNextCard(username).then((card) => {
+    res.json({ card })
   })
 })
 
+router.post('/:user/deck/:deckName', (req, res, next) => {
+  const { user, deckName } = req.params
 
-router.post('/user', (req, res) => {
-  const { email } = req.body
-
-  Users.createNewUser(email).then((user) => {
-    res.json({
-      user,
+  Cards.startNewDeck(user, deckName)
+    .then(() => {
+      res.sendStatus(200)
     })
-  })
+    .catch(next)
 })
 
 export default router

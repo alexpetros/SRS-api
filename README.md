@@ -28,11 +28,11 @@ A future `yarn deploy` should push to heroku.
     - POST no update
 * Record complete metrics 
     - Logging
-    - History db?
 
 ### Database Specifications
 * user
     - email
+    - username
     - password
     - preferences
 * card
@@ -45,3 +45,15 @@ A future `yarn deploy` should push to heroku.
     - userId
     - cardId
     - nextDate (sort on this)
+
+## API Reference
+All routes are at {url}/api
+
+* /
+    - POST - create new user
+        + username (String): new user's username
+* /:user
+    - GET - return next card 
+    - POST /deck/:deckName - start deck in user history
+    - POST /card/:cardId - yes or no for a card
+        + remembered (boolean): card success or failure

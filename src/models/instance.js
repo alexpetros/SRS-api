@@ -1,7 +1,7 @@
 // an "instance" of a card is a particular user's history with it
 import mongoose, { Schema } from 'mongoose'
 
-const { ObjectId } = Schema.Type
+const { ObjectId } = Schema.Types
 
 const instanceSchema = new Schema({
   userId: { type: ObjectId },

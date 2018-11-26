@@ -4,8 +4,8 @@ function handleError(err) {
   console.log(err)
 }
 
-export const createNewUser = (email) => {
-  const newUser = new User({ email })
+export const createNewUser = (username) => {
+  const newUser = new User({ username })
 
   return newUser.save()
     .catch((err) => {
@@ -13,8 +13,8 @@ export const createNewUser = (email) => {
     })
 }
 
-export const getUser = (email) => {
-  return User.findOne({ email })
+export const getUser = (username) => {
+  return User.findOne({ username })
     .catch((err) => {
       handleError(err)
     })
