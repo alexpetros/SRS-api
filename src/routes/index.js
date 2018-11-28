@@ -1,6 +1,6 @@
 import { Router } from 'express'
-import * as Cards from './controllers/card-controller'
-import * as Users from './controllers/user-controller'
+import * as Cards from '../controllers/card-controller'
+import * as Users from '../controllers/user-controller'
 
 const router = Router()
 

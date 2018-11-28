@@ -5,7 +5,7 @@ import cors from 'cors'
 import morgan from 'morgan'
 import mongoose from 'mongoose'
 
-import apiRouter from './router'
+import apiRouter from './routes'
 
 // initialize
 const app = express()
