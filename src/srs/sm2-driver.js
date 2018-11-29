@@ -3,16 +3,16 @@
 const MIN_PERCENT_OVERDUE = 2
 const PERFORMANCE_THRESHOLD = 0.6
 
-function calculateDifficulty(percentOverdue, performanceRating) {
-  const difficulty = percentOverdue * (1 / 17) * (8 - 9 * performanceRating)
+function calculateDifficulty(difficulty, percentOverdue, performanceRating) {
+  const newDifficulty = difficulty + percentOverdue * (1 / 17) * (8 - 9 * performanceRating)
 
   // clamp to [0,1]
-  if (difficulty < 0) {
+  if (newDifficulty < 0) {
     return 0
-  } else if (difficulty > 1) {
+  } else if (newDifficulty > 1) {
     return 1
   } else {
-    return difficulty
+    return newDifficulty
   }
 }
 
@@ -20,13 +20,16 @@ function calculateDifficultyWeight(difficulty) {
   return 3 - 1.7 * difficulty
 }
 
-function calculateDaysToNextReview(difficultyWeight, percentOverdue, isCorrect) {
+function calculateDaysToNextReview(daysBetweenReviews, difficultyWeight, percentOverdue, isCorrect) {
+  let factor
   if (isCorrect) {
-    return 1 + (difficultyWeight - 1) * percentOverdue
+    factor = 1 + (difficultyWeight - 1) * percentOverdue
   } else {
     const days = 1 / (difficultyWeight ** 2)
-    return days < 1 ? 1 : days
+    factor = days < 1 ? 1 : days
   }
+
+  return factor * daysBetweenReviews
 }
 
 /**
@@ -37,8 +40,8 @@ function calculateDaysToNextReview(difficultyWeight, percentOverdue, isCorrect) 
  */
 function calculatePercentOverdue(dateLastReviewed, daysBetweenReviews, isCorrect) {
   const now = new Date()
-  const daysLate = now.getDate() - dateLastReviewed.getDate()
-  const percentOverdue = daysLate / daysBetweenReviews
+  const daysSinceReview = now.getDate() - dateLastReviewed.getDate()
+  const percentOverdue = daysSinceReview / daysBetweenReviews
 
   if (isCorrect) {
     return Math.min(percentOverdue, MIN_PERCENT_OVERDUE)
@@ -56,19 +59,19 @@ function calculatePercentOverdue(dateLastReviewed, daysBetweenReviews, isCorrect
  * @param  {integer} performanceRating - user's performance scaled [0,1]
  * @return {Object} new card to be saved to db
  */
-export function updateCardStats(instance, performanceRating) {
+export function updateInstanceStats(instance, performanceRating) {
   // retrieve current stats (both stored and calculated)
   const isCorrect = performanceRating > PERFORMANCE_THRESHOLD
-  const { pastOccurances, nextDate } = instance
+  const { difficulty, pastOccurances, nextDate } = instance
   const dateLastReviewed = pastOccurances[0]
   const daysBetweenReviews = nextDate.getDate() - dateLastReviewed.getDate()
 
   // calculate new stats
   const now = new Date()
   const percentOverdue = calculatePercentOverdue(dateLastReviewed, daysBetweenReviews, isCorrect)
-  const newDifficulty = calculateDifficulty(percentOverdue, performanceRating)
+  const newDifficulty = calculateDifficulty(difficulty, percentOverdue, performanceRating)
   const newDifficultyWeight = calculateDifficultyWeight(newDifficulty)
-  const daysToNextReivew = calculateDaysToNextReview(newDifficultyWeight, percentOverdue, isCorrect)
+  const daysToNextReivew = calculateDaysToNextReview(daysBetweenReviews, newDifficultyWeight, percentOverdue, isCorrect)
 
   // update instance history
   const newPastOccurances = [now, ...pastOccurances]

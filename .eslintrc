@@ -3,18 +3,10 @@
     "parser": "babel-eslint",
     "env": {
         "browser": true,
-        "es6": true
+        "es6": true,
+        "jest": true
     },
     "rules": {
-        "react/jsx-uses-react": 2,
-        "react/jsx-uses-vars": 2,
-        "react/react-in-jsx-scope": 2,
-        "react/prop-types": 0,
-        "react/jsx-first-prop-new-line": 0,
-        "react/jsx-filename-extension": 0,
-        "react/jsx-closing-bracket-location": [1, "after-props"],
-        "jsx-a11y/click-events-have-key-events": 0,
-        "jsx-a11y/no-noninteractive-element-interactions": 0,
         "semi": [1, "never"],
         "brace-style": [2, "1tbs", {"allowSingleLine" : true}],
         "strict": 0,
@@ -34,9 +26,6 @@
         "no-restricted-syntax": [
           0,
           "DebuggerStatement"
-        ],
-        "plugins": [
-            "react"
         ],
         "parserOptions": {
             "ecmaFeatures": {

@@ -14,7 +14,7 @@ If you get `MongoNetworkError: failed to connect to server [localhost:27017] on 
 
 `yarn prod` outputs a local build to a top-level `dist` directory, then runs the server in node.
 
-`yarn test` doesn't do anything yet, which is embarrassing.
+`yarn test` runs the jest testing suite.
 
 A future `yarn deploy` should push to heroku.
 
