@@ -25,11 +25,11 @@ function calculateDaysToNextReview(daysBetweenReviews, difficultyWeight, percent
   if (isCorrect) {
     factor = 1 + (difficultyWeight - 1) * percentOverdue
   } else {
-    const days = 1 / (difficultyWeight ** 2)
-    factor = days < 1 ? 1 : days
+    factor = 1 / (difficultyWeight ** 2)
   }
 
-  return factor * daysBetweenReviews
+  const days = factor * daysBetweenReviews
+  return days < 1 ? 1 : days
 }
 
 /**
