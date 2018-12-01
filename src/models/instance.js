@@ -6,6 +6,7 @@ const { ObjectId } = Schema.Types
 const instanceSchema = new Schema({
   userId: { type: ObjectId },
   cardId: ObjectId,
+  deck: String,
   difficulty: Number,
   nextDate: Date,
   pastOccurances: [Date],

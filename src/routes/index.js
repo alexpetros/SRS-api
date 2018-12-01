@@ -31,4 +31,14 @@ router.post('/:user/deck/:deckName', (req, res, next) => {
     .catch(next)
 })
 
+router.delete('/:user/deck/:deckName', (req, res, next) => {
+  const { user, deckName } = req.params
+
+  Cards.deleteDeck(user, deckName)
+    .then(() => {
+      res.sendStatus(200)
+    })
+    .catch(next)
+})
+
 export default router
