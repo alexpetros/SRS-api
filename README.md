@@ -48,12 +48,13 @@ A future `yarn deploy` should push to heroku.
 
 ## API Reference
 All routes are at {url}/api
-
-* /
+* */*
     - POST - create new user
         + username (String): new user's username
-* /:user
+* */:user*
     - GET - return next card 
-    - POST /deck/:deckName - start deck in user history
-    - POST /card/:cardId - yes or no for a card
-        + remembered (boolean): card success or failure
+    - POST */card* - post response to a card
+        + cardId (String)
+        + performanceRating (integer) - currently [0,5]
+    - POST */deck/:deckName* - start deck in user history
+    - DELETE */deck/:deckName* - removes deck from user history

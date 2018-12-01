@@ -71,18 +71,21 @@ export function getNextCard(username) {
 }
 
 
-export function enterCardResponse(userId, cardId, performanceRating) {
-  return Instance.findOne({ userId, cardId })
-    .then((instance) => {
-      const newInstance = updateInstanceStats(instance, performanceRating)
-      const { difficulty, nextDate, pastOccurances } = newInstance
+export function enterCardResponse(username, cardId, performanceRating) {
+  return User.findOne({ username })
+    .then((user) => {
+      Instance.findOne({ userId: user._id, cardId })
+        .then((instance) => {
+          const newInstance = updateInstanceStats(instance, performanceRating)
+          const { difficulty, nextDate, pastOccurances } = newInstance
 
-      instance.set({
-        difficulty,
-        nextDate,
-        pastOccurances,
-      })
-      instance.save()
+          instance.set({
+            difficulty,
+            nextDate,
+            pastOccurances,
+          })
+          instance.save()
+        })
     })
 }
 

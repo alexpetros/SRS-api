@@ -4,6 +4,7 @@ import * as Users from '../controllers/user-controller'
 
 const router = Router()
 
+// add new user
 router.post('/', (req, res) => {
   const { username } = req.body
 
@@ -13,6 +14,7 @@ router.post('/', (req, res) => {
     })
 })
 
+// get next card for user
 router.get('/:user', (req, res) => {
   const username = req.params.user
 
@@ -21,6 +23,19 @@ router.get('/:user', (req, res) => {
   })
 })
 
+// post response to card
+router.post('/:user/card', (req, res, next) => {
+  const username = req.params.user
+  const { cardId, performanceRating } = req.body
+
+  Cards.enterCardResponse(username, cardId, performanceRating)
+    .then(() => {
+      res.sendStatus(200)
+    })
+    .catch(next)
+})
+
+// create new deck of instances for user
 router.post('/:user/deck/:deckName', (req, res, next) => {
   const { user, deckName } = req.params
 
@@ -31,6 +46,7 @@ router.post('/:user/deck/:deckName', (req, res, next) => {
     .catch(next)
 })
 
+// remove deck of instances from user
 router.delete('/:user/deck/:deckName', (req, res, next) => {
   const { user, deckName } = req.params
 
