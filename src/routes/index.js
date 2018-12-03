@@ -27,7 +27,6 @@ router.get('/:user', (req, res) => {
 router.post('/:user/card', (req, res, next) => {
   const username = req.params.user
   const { cardId, performanceRating } = req.body
-  console.log(req.body)
 
   Cards.enterCardResponse(username, cardId, performanceRating)
     .then(() => {

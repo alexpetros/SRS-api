@@ -41,7 +41,9 @@ function calculateDaysToNextReview(daysBetweenReviews, difficultyWeight, percent
 function calculatePercentOverdue(dateLastReviewed, daysBetweenReviews, isCorrect) {
   const now = new Date()
   const daysSinceReview = now.getDate() - dateLastReviewed.getDate()
-  const percentOverdue = daysSinceReview / daysBetweenReviews
+  const percentOverdue = daysSinceReview / daysBetweenReviews || 0
+  console.log(daysBetweenReviews)
+
 
   if (isCorrect) {
     return Math.min(percentOverdue, MIN_PERCENT_OVERDUE)
@@ -76,7 +78,6 @@ export function updateInstanceStats(instance, performanceRating) {
   // update instance history
   const newPastOccurances = [now, ...pastOccurances]
   const newNextDate = new Date(now)
-  console.log(instance)
   newNextDate.setDate(now.getDate() + daysToNextReivew)
 
   const newInstance = {
@@ -85,7 +86,6 @@ export function updateInstanceStats(instance, performanceRating) {
     pastOccurances: newPastOccurances,
   }
 
-  console.log(newInstance)
 
   return newInstance
 }

@@ -1,3 +1,4 @@
+/* eslint no-unused-vars: 0 */
 import { updateInstanceStats } from '../../src/srs'
 
 // time constants
@@ -17,12 +18,15 @@ TWO_DAYS_AGO.setDate(NOW.getDate() - 2)
 const ONE_PAST_OCCURANCE = [TWO_DAYS_AGO]
 
 // answer constants
-const INCORRECT_ANSWER_DIFFICULT = 0.2
-const CORRECT_ANSWER_MODERATE = 0.8
-const CORRECT_ANSWER_EASY = 1
+const LOW_CONFIDENCE_FAILURE = 0
+const MED_CONFIDENCE_FAILURE = 0.2
+const HIGH_CONFIDENCE_FAILURE = 0.4
+const LOW_CONFIDENCE_SUCCESS = 0.6
+const MED_CONFIDENCE_SUCCESS = 0.8
+const HIGH_CONFIDENCE_SUCCESS = 1
 
 
-describe('srs calcuations', () => {
+describe('srs difficulty and date calcuations', () => {
   const testInstance = {
     userId: TEST_USER_ID,
     cardId: TEST_CARD_ID,
@@ -32,28 +36,28 @@ describe('srs calcuations', () => {
   }
 
   it('increases difficulty if you get it wrong', () => {
-    const newInstance = updateInstanceStats(testInstance, INCORRECT_ANSWER_DIFFICULT)
+    const newInstance = updateInstanceStats(testInstance, MED_CONFIDENCE_FAILURE)
     expect(newInstance.difficulty).toBeGreaterThan(testInstance.difficulty)
   })
 
   it('increases difficulty if you get it right (not confident)', () => {
-    const newInstance = updateInstanceStats(testInstance, CORRECT_ANSWER_MODERATE)
+    const newInstance = updateInstanceStats(testInstance, MED_CONFIDENCE_SUCCESS)
     expect(newInstance.difficulty).toBeGreaterThan(testInstance.difficulty)
   })
 
   it('decreases difficulty if you get it right (confident)', () => {
-    const newInstance = updateInstanceStats(testInstance, CORRECT_ANSWER_EASY)
+    const newInstance = updateInstanceStats(testInstance, HIGH_CONFIDENCE_SUCCESS)
     expect(newInstance.difficulty).toBeLessThan(testInstance.difficulty)
   })
 
   it('sets the next review day for tomorrow if you get it wrong', () => {
-    const newInstance = updateInstanceStats(testInstance, INCORRECT_ANSWER_DIFFICULT)
+    const newInstance = updateInstanceStats(testInstance, MED_CONFIDENCE_FAILURE)
     const daysUntil = (newInstance.nextDate - NOW) / MS_IN_DAYS
     expect(daysUntil).toBeLessThan(2)
   })
 
   it('sets the next review day for a longer interval if you get it right', () => {
-    const newInstance = updateInstanceStats(testInstance, CORRECT_ANSWER_EASY)
+    const newInstance = updateInstanceStats(testInstance, HIGH_CONFIDENCE_SUCCESS)
     const daysUntil = (newInstance.nextDate - NOW) / MS_IN_DAYS
     expect(daysUntil).toBeGreaterThan(2)
   })

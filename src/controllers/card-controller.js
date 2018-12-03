@@ -31,7 +31,7 @@ function addDeckToUser(userId, deck) {
           userId,
           deck,
           cardId: card._id,
-          nextDate: new Date(),
+          nextDate: startDate,
           pastOccurances: [],
         }
 
@@ -61,7 +61,12 @@ export function getNextCard(username) {
     })
     .then((instance) => {
       console.log(instance)
-      return Card.findById(instance.cardId)
+
+      if (instance.nextDate < new Date()) {
+        return Card.findById(instance.cardId)
+      } else {
+        return null
+      }
     })
     .catch((err) => {
       handleError(err, 500)
