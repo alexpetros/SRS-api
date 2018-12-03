@@ -56,10 +56,8 @@ export function getNextCard(username) {
   return User.findOne({ username })
     .then((user) => {
       return Instance
-        .findOne({
-          $query: { userId: user._id },
-          $orderby: { nextDate: -1 },
-        })
+        .findOne({ userId: user._id })
+        .sort({ nextDate: 1 })
     })
     .then((instance) => {
       console.log(instance)

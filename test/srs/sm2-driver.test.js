@@ -22,7 +22,7 @@ const CORRECT_ANSWER_MODERATE = 0.8
 const CORRECT_ANSWER_EASY = 1
 
 
-describe('srs date sequence', () => {
+describe('srs calcuations', () => {
   const testInstance = {
     userId: TEST_USER_ID,
     cardId: TEST_CARD_ID,
@@ -58,3 +58,9 @@ describe('srs date sequence', () => {
     expect(daysUntil).toBeGreaterThan(2)
   })
 })
+
+// needs to not break down when fed NaN difficulty of invalid date
+
+// describe('driver robustness', () => {
+//   it('handles one past occurance')
+// })

@@ -63,7 +63,7 @@ export function updateInstanceStats(instance, performanceRating) {
   // retrieve current stats (both stored and calculated)
   const isCorrect = performanceRating > PERFORMANCE_THRESHOLD
   const { difficulty, pastOccurances, nextDate } = instance
-  const dateLastReviewed = pastOccurances[0]
+  const dateLastReviewed = pastOccurances[0] ? pastOccurances[0] : new Date()
   const daysBetweenReviews = nextDate.getDate() - dateLastReviewed.getDate()
 
   // calculate new stats
@@ -76,14 +76,16 @@ export function updateInstanceStats(instance, performanceRating) {
   // update instance history
   const newPastOccurances = [now, ...pastOccurances]
   const newNextDate = new Date(now)
+  console.log(instance)
   newNextDate.setDate(now.getDate() + daysToNextReivew)
 
   const newInstance = {
-    ...instance,
     difficulty: newDifficulty,
     nextDate: newNextDate,
     pastOccurances: newPastOccurances,
   }
+
+  console.log(newInstance)
 
   return newInstance
 }

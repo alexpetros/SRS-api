@@ -3,13 +3,15 @@ import mongoose, { Schema } from 'mongoose'
 
 const { ObjectId } = Schema.Types
 
+const DEFAULT_DIFFICULTY = 0.3
+
 const instanceSchema = new Schema({
   userId: { type: ObjectId },
   cardId: ObjectId,
   deck: String,
-  difficulty: Number,
-  nextDate: Date,
-  pastOccurances: [Date],
+  difficulty: { type: Number, default: DEFAULT_DIFFICULTY },
+  nextDate: { type: Date, default: new Date() },
+  pastOccurances: { type: [Date], default: [] },
 })
 
 instanceSchema.index({ userId: 1, nextDate: -1 })
