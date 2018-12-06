@@ -11,6 +11,9 @@
     "build": "babel src -d dist",
     "prod": "yarn build; node dist/server.js"
   },
+  "engines": {
+    "node": "10.3.0"
+  },
   "dependencies": {
     "body-parser": "^1.18.3",
     "cors": "^2.8.5",
