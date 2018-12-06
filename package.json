@@ -12,7 +12,7 @@
     "prod": "yarn build; node dist/server.js"
   },
   "engines": {
-    "node": "10.3.0"
+    "node": "11.1.0"
   },
   "dependencies": {
     "body-parser": "^1.18.3",
