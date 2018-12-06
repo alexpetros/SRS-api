@@ -4,7 +4,7 @@ import * as Users from '../controllers/user-controller'
 
 const router = Router()
 
-// add new user
+/** add new user */
 router.post('/', (req, res) => {
   const { username } = req.body
 
@@ -14,8 +14,17 @@ router.post('/', (req, res) => {
     })
 })
 
-// get next card for user
+/** get user info */
 router.get('/:user', (req, res) => {
+  const { username } = req.body
+
+  Users.getUser(username).then((user) => {
+    res.json({ user })
+  })
+})
+
+/** get next card for user */
+router.get('/:user/card', (req, res) => {
   const username = req.params.user
 
   Cards.getNextCard(username).then((card) => {
@@ -23,19 +32,33 @@ router.get('/:user', (req, res) => {
   })
 })
 
-// post response to card
-router.post('/:user/card', (req, res, next) => {
+/** get random card for user */
+router.get('/:user/random', (req, res) => {
   const username = req.params.user
-  const { cardId, performanceRating } = req.body
 
-  Cards.enterCardResponse(username, cardId, performanceRating)
-    .then(() => {
-      res.sendStatus(200)
-    })
-    .catch(next)
+  Cards.getRandomCard(username).then((card) => {
+    res.json({ card })
+  })
 })
 
-// create new deck of instances for user
+/** post response to card */
+router.post('/:user/card', (req, res, next) => {
+  const username = req.params.user
+  const { cardId, performanceRating, dontUpdate } = req.body
+
+  // allows client to send "dummy" responses
+  if (dontUpdate) {
+    res.sendStatus(200)
+  } else {
+    Cards.enterCardResponse(username, cardId, performanceRating)
+      .then(() => {
+        res.sendStatus(200)
+      })
+      .catch(next)
+  }
+})
+
+/** create new deck of instances for user */
 router.post('/:user/deck/:deckName', (req, res, next) => {
   const { user, deckName } = req.params
 
@@ -46,7 +69,7 @@ router.post('/:user/deck/:deckName', (req, res, next) => {
     .catch(next)
 })
 
-// remove deck of instances from user
+/** remove deck of instances from user */
 router.delete('/:user/deck/:deckName', (req, res, next) => {
   const { user, deckName } = req.params
 

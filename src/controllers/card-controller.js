@@ -73,6 +73,21 @@ export function getNextCard(username) {
     })
 }
 
+export const getRandomCard = (username) => {
+  return User.findOne({ username })
+    .then((user) => {
+      return Instance
+        .aggregate([{ $sample: { size: 1 } }])
+        .then(cards => cards[0])
+        .catch((err) => {
+          handleError(err, 500)
+        })
+    })
+    .then((instance) => {
+      return Card.findById(instance.cardId)
+    })
+}
+
 
 export function enterCardResponse(username, cardId, performanceRating) {
   return User.findOne({ username })
