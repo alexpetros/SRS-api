@@ -60,12 +60,10 @@ export function getNextCard(username) {
         .sort({ nextDate: 1 })
     })
     .then((instance) => {
-      console.log(instance)
-
-      if (instance.nextDate < new Date()) {
-        return Card.findById(instance.cardId)
-      } else {
+      if (instance.nextDate > new Date()) {
         return null
+      } else {
+        return Card.findById(instance.cardId)
       }
     })
     .catch((err) => {
@@ -73,6 +71,37 @@ export function getNextCard(username) {
     })
 }
 
+/**
+ * get the nth card up
+ * @param  {String} username
+ * @param  {Number} limit
+ * @return {Array[String]}          list of cards
+ */
+export function getXCardAfter(username, limit) {
+  return User.findOne({ username })
+    .then((user) => {
+      return Instance
+        .find({ userId: user._id })
+        .sort({ nextDate: 1 })
+        .limit(limit)
+    })
+    .then((instances) => {
+      const instance = instances[instances.length - 1]
+      const { cardId, nextDate } = instance
+
+      if (nextDate > new Date() || instances.length === 1) {
+        return null
+      } else {
+        return Card.findById(cardId)
+      }
+    })
+}
+
+/**
+ * get a random card from the user's instances
+ * @param  {String} username
+ * @return {Promise}          resolves to random card
+ */
 export const getRandomCard = (username) => {
   return User.findOne({ username })
     .then((user) => {
@@ -88,7 +117,13 @@ export const getRandomCard = (username) => {
     })
 }
 
-
+/**
+ * log a user's response to seeing a card
+ * @param  {String} username
+ * @param  {String} cardId
+ * @param  {Number} performanceRating
+ * @return {Promise}                   resolve to true if successful
+ */
 export function enterCardResponse(username, cardId, performanceRating) {
   return User.findOne({ username })
     .then((user) => {

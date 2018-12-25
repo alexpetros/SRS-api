@@ -32,6 +32,16 @@ router.get('/:user/card', (req, res) => {
   })
 })
 
+router.get('/:user/card/:num', (req, res) => {
+  const username = req.params.user
+  const skip = Number(req.params.num)
+
+  // the card we want will be the last in the array
+  Cards.getXCardAfter(username, skip).then((card) => {
+    res.json({ card })
+  })
+})
+
 /** get random card for user */
 router.get('/:user/random', (req, res) => {
   const username = req.params.user
