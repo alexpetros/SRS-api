@@ -5,7 +5,7 @@
   "author": "Alex Petros",
   "main": "src/server.js",
   "scripts": {
-    "test": "jest",
+    "test": "jest --watch",
     "dev": "nodemon src/server.js --exec babel-node",
     "start": "babel-node src/server.js",
     "build": "babel src -d dist",
@@ -13,6 +13,9 @@
   },
   "engines": {
     "node": "11.1.0"
+  },
+  "jest": {
+    "testEnvironment": "node"
   },
   "dependencies": {
     "body-parser": "^1.18.3",
@@ -33,6 +36,7 @@
     "eslint-plugin-jsx-a11y": "^6.1.2",
     "eslint-plugin-react": "^7.11.1",
     "jest": "^23.6.0",
+    "mockingoose": "^2.12.0",
     "nodemon": "^1.18.6"
   }
 }

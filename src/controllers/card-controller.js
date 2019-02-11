@@ -2,7 +2,8 @@ import User from '../models/user'
 import Card from '../models/card'
 import Instance from '../models/instance'
 
-import { updateInstanceStats } from '../srs'
+import * as srs from '../srs/sm2-driver'
+import * as initial from '../srs/initial-learning-driver'
 
 function handleError(msg, statusCode) {
   const error = new Error(msg)
@@ -129,7 +130,7 @@ export function enterCardResponse(username, cardId, performanceRating) {
     .then((user) => {
       Instance.findOne({ userId: user._id, cardId })
         .then((instance) => {
-          const newInstance = updateInstanceStats(instance, performanceRating)
+          const newInstance = srs.updateInstanceStats(instance, performanceRating)
           const { difficulty, nextDate, pastOccurances } = newInstance
 
           instance.set({
