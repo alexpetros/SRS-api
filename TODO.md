@@ -5,3 +5,4 @@
 * User specific algorithm
 * Anki import/exports
 * Signup interface
+* Notifications

@@ -130,9 +130,12 @@ export function enterCardResponse(username, cardId, performanceRating) {
     .then((user) => {
       Instance.findOne({ userId: user._id, cardId })
         .then((instance) => {
-          const newInstance = sm2.updateInstanceStats(instance, performanceRating)
+          // choose the correct driver based on whether we're in the learning phase
+          const driver = instance.isLearning ? initial : sm2
+          const newInstance = driver.updateInstanceStats(instance, performanceRating)
           const { difficulty, nextDate, pastOccurances } = newInstance
 
+          // save the new properties to the old instance
           instance.set({
             difficulty,
             nextDate,

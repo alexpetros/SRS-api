@@ -4,7 +4,7 @@ import Instance from '../../src/models/instance'
 
 import * as Cards from '../../src/controllers/card-controller'
 import * as sm2 from '../../src/srs/sm2-driver'
-
+import * as initial from '../../src/srs/initial-learning-driver'
 
 
 // constants
@@ -38,6 +38,7 @@ const TEST_INSTANCE = {
   difficulty: DEFAULT_DIFFICULTY,
   nextDate: NOW,
   pastOccurances: ONE_PAST_OCCURANCE,
+  isLearning: false
 }
 
 
@@ -59,10 +60,23 @@ describe.only('enterCardResponse', () => {
     })
   })
 
-  it('calls sm2 driver', () => {
+  // note that this test relies on the isLearning property
+  // it doesn't check that the virtual schema is working properly
+  it('calls learning driver when in learning phase', () => {
+    initial.updateInstanceStats = jest.fn()
+    initial.updateInstanceStats.mockResolvedValue({difficulty: 1})
+
+    TEST_INSTANCE.isLearning = true
+    Cards.enterCardResponse(USERNAME, CARD_ID, SUCCESS_RATING).then(() => {
+      expect(initial.updateInstanceStats).toBeCalled()
+    })
+  })
+
+  it('calls sm2 driver when not in learning phase', () => {
     sm2.updateInstanceStats = jest.fn()
     sm2.updateInstanceStats.mockResolvedValue({difficulty: 1})
 
+    TEST_INSTANCE.isLearning = false
     Cards.enterCardResponse(USERNAME, CARD_ID, SUCCESS_RATING).then(() => {
       expect(sm2.updateInstanceStats).toBeCalled()
     })
