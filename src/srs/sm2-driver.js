@@ -42,7 +42,7 @@ function calculatePercentOverdue(dateLastReviewed, daysBetweenReviews, isCorrect
   const now = new Date()
   const daysSinceReview = now.getDate() - dateLastReviewed.getDate()
   const percentOverdue = daysSinceReview / daysBetweenReviews || 0
-  console.log(daysBetweenReviews)
+  // console.log(daysBetweenReviews)
 
 
   if (isCorrect) {
