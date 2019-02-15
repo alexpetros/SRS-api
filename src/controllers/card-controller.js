@@ -131,7 +131,7 @@ export function enterCardResponse(username, cardId, performanceRating) {
       Instance.findOne({ userId: user._id, cardId })
         .then((instance) => {
           // choose the correct driver based on whether we're in the learning phase
-          const driver = instance.isLearning ? initial : sm2
+          const driver = instance.learningCount >= 0 ? initial : sm2
           const newInstance = driver.updateInstanceStats(instance, performanceRating)
           const { difficulty, nextDate, pastOccurances } = newInstance
 

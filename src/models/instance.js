@@ -13,11 +13,7 @@ const instanceSchema = new Schema({
   difficulty: { type: Number, default: DEFAULT_DIFFICULTY },
   nextDate: { type: Date, default: new Date() },
   pastOccurances: { type: [Date], default: [] },
-})
-
-instanceSchema.virtual('isLearning').get(() => {
-  const difference = new Date() - pastOccurances[0]
-  return pastOccurances[0] === undefined || difference < ONE_DAY
+  learningCount: { type: Number, default: 0}
 })
 
 

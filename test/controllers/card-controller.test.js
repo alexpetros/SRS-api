@@ -38,7 +38,7 @@ const TEST_INSTANCE = {
   difficulty: DEFAULT_DIFFICULTY,
   nextDate: NOW,
   pastOccurances: ONE_PAST_OCCURANCE,
-  isLearning: false
+  learningCount: -1
 }
 
 
@@ -53,32 +53,35 @@ describe.only('enterCardResponse', () => {
     Instance.findOne.mockResolvedValue(TEST_INSTANCE)
   })
 
-  it('gets correct card instance using username lookup', () => {
+  it('gets correct card instance using username lookup', (done) => {
     Cards.enterCardResponse(USERNAME, CARD_ID, SUCCESS_RATING).then(() => {
       expect(User.findOne).toBeCalledWith({username: USERNAME})
       expect(Instance.findOne).toBeCalledWith({userId: USER_ID, cardId:CARD_ID})
+      done()
     })
   })
 
   // note that this test relies on the isLearning property
   // it doesn't check that the virtual schema is working properly
-  it('calls learning driver when in learning phase', () => {
+  it('calls learning driver when in learning phase', (done) => {
     initial.updateInstanceStats = jest.fn()
     initial.updateInstanceStats.mockResolvedValue({difficulty: 1})
 
-    TEST_INSTANCE.isLearning = true
+    TEST_INSTANCE.learningCount = 0
     Cards.enterCardResponse(USERNAME, CARD_ID, SUCCESS_RATING).then(() => {
       expect(initial.updateInstanceStats).toBeCalled()
+      done()
     })
   })
 
-  it('calls sm2 driver when not in learning phase', () => {
+  it('calls sm2 driver when not in learning phase', (done) => {
     sm2.updateInstanceStats = jest.fn()
     sm2.updateInstanceStats.mockResolvedValue({difficulty: 1})
 
-    TEST_INSTANCE.isLearning = false
+    TEST_INSTANCE.learningCount = -1
     Cards.enterCardResponse(USERNAME, CARD_ID, SUCCESS_RATING).then(() => {
       expect(sm2.updateInstanceStats).toBeCalled()
+      done()
     })
   })
 })
