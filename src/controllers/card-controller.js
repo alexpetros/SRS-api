@@ -133,13 +133,14 @@ export function enterCardResponse(username, cardId, performanceRating) {
           // choose the correct driver based on whether we're in the learning phase
           const driver = instance.learningCount >= 0 ? initial : sm2
           const newInstance = driver.updateInstanceStats(instance, performanceRating)
-          const { difficulty, nextDate, pastOccurances } = newInstance
+          const { difficulty, nextDate, pastOccurances, learningCount } = newInstance
 
           // save the new properties to the old instance
           instance.set({
             difficulty,
             nextDate,
             pastOccurances,
+            learningCount
           })
           instance.save()
         })

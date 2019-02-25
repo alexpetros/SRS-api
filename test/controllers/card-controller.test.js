@@ -63,11 +63,22 @@ describe.only('enterCardResponse', () => {
 
   // note that this test relies on the isLearning property
   // it doesn't check that the virtual schema is working properly
-  it('calls learning driver when in learning phase', (done) => {
+  it('calls learning driver when starting learning phase', (done) => {
     initial.updateInstanceStats = jest.fn()
     initial.updateInstanceStats.mockResolvedValue({difficulty: 1})
 
     TEST_INSTANCE.learningCount = 0
+    Cards.enterCardResponse(USERNAME, CARD_ID, SUCCESS_RATING).then(() => {
+      expect(initial.updateInstanceStats).toBeCalled()
+      done()
+    })
+  })
+
+  it('calls learning driver while in learning phase', (done) => {
+    initial.updateInstanceStats = jest.fn()
+    initial.updateInstanceStats.mockResolvedValue({difficulty: 1})
+
+    TEST_INSTANCE.learningCount = 3
     Cards.enterCardResponse(USERNAME, CARD_ID, SUCCESS_RATING).then(() => {
       expect(initial.updateInstanceStats).toBeCalled()
       done()
