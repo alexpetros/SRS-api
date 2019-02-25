@@ -140,7 +140,7 @@ export function enterCardResponse(username, cardId, performanceRating) {
             difficulty,
             nextDate,
             pastOccurances,
-            learningCount
+            learningCount,
           })
           instance.save()
         })

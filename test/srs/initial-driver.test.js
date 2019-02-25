@@ -69,6 +69,18 @@ describe('srs difficulty and date calcuations', () => {
     expect(secondsUntil).toBeGreaterThan(INTERVALS[4])
     expect(secondsUntil).toBeLessThan(INTERVALS[4] + 1)
   })
+
+  it('increments learning count if learning count is less than 4', () => {
+    testInstance.learningCount = LEARNING_COUNT_START
+    const newInstance = updateInstanceStats(testInstance, SUCCESS_PERFORMANCE)
+    expect(newInstance.learningCount).toBe(LEARNING_COUNT_START + 1)
+  })
+
+  it('exits learning phase after learning count hits 4', () => {
+    testInstance.learningCount = 4
+    const newInstance = updateInstanceStats(testInstance, SUCCESS_PERFORMANCE)
+    expect(newInstance.learningCount).toBe(-1)
+  })
 })
 
 // needs to not break down when fed NaN difficulty of invalid date
