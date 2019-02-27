@@ -1,5 +1,4 @@
 import User from '../../src/models/user'
-import Card from '../../src/models/card'
 import Instance from '../../src/models/instance'
 
 import * as Cards from '../../src/controllers/card-controller'
@@ -10,7 +9,7 @@ import * as initial from '../../src/srs/initial-learning-driver'
 // constants
 const USERNAME = 'test_username'
 const EMAIL = 'test_user@email.com'
-const SUCCESS_RATING = .8
+const SUCCESS_RATING = 0.8
 const USER_ID = 1
 const CARD_ID = '5c02af156271f4f70f0572c0'
 const DEFAULT_DIFFICULTY = 0.3
@@ -29,7 +28,7 @@ const TEST_USER = {
   _id: USER_ID,
   username: USERNAME,
   email: EMAIL,
-  decks: []
+  decks: [],
 }
 
 const TEST_INSTANCE = {
@@ -38,16 +37,16 @@ const TEST_INSTANCE = {
   difficulty: DEFAULT_DIFFICULTY,
   nextDate: NOW,
   pastOccurances: ONE_PAST_OCCURANCE,
-  learningCount: -1
+  learningCount: -1,
 }
 
 
-describe.only('enterCardResponse', () => {
+describe('enterCardResponse', () => {
   beforeEach(() => {
     User.findOne = jest.fn()
     Instance.findOne = jest.fn()
     TEST_INSTANCE.set = jest.fn()
-    TEST_INSTANCE.save= jest.fn()
+    TEST_INSTANCE.save = jest.fn()
 
     User.findOne.mockResolvedValue(TEST_USER)
     Instance.findOne.mockResolvedValue(TEST_INSTANCE)
@@ -55,8 +54,8 @@ describe.only('enterCardResponse', () => {
 
   it('gets correct card instance using username lookup', (done) => {
     Cards.enterCardResponse(USERNAME, CARD_ID, SUCCESS_RATING).then(() => {
-      expect(User.findOne).toBeCalledWith({username: USERNAME})
-      expect(Instance.findOne).toBeCalledWith({userId: USER_ID, cardId:CARD_ID})
+      expect(User.findOne).toBeCalledWith({ username: USERNAME })
+      expect(Instance.findOne).toBeCalledWith({ userId: USER_ID, cardId: CARD_ID })
       done()
     })
   })
@@ -65,7 +64,7 @@ describe.only('enterCardResponse', () => {
   // it doesn't check that the virtual schema is working properly
   it('calls learning driver when starting learning phase', (done) => {
     initial.updateInstanceStats = jest.fn()
-    initial.updateInstanceStats.mockResolvedValue({difficulty: 1})
+    initial.updateInstanceStats.mockResolvedValue({ difficulty: 1 })
 
     TEST_INSTANCE.learningCount = 0
     Cards.enterCardResponse(USERNAME, CARD_ID, SUCCESS_RATING).then(() => {
@@ -76,7 +75,7 @@ describe.only('enterCardResponse', () => {
 
   it('calls learning driver while in learning phase', (done) => {
     initial.updateInstanceStats = jest.fn()
-    initial.updateInstanceStats.mockResolvedValue({difficulty: 1})
+    initial.updateInstanceStats.mockResolvedValue({ difficulty: 1 })
 
     TEST_INSTANCE.learningCount = 3
     Cards.enterCardResponse(USERNAME, CARD_ID, SUCCESS_RATING).then(() => {
@@ -87,11 +86,38 @@ describe.only('enterCardResponse', () => {
 
   it('calls sm2 driver when not in learning phase', (done) => {
     sm2.updateInstanceStats = jest.fn()
-    sm2.updateInstanceStats.mockResolvedValue({difficulty: 1})
+    sm2.updateInstanceStats.mockResolvedValue({ difficulty: 1 })
 
     TEST_INSTANCE.learningCount = -1
     Cards.enterCardResponse(USERNAME, CARD_ID, SUCCESS_RATING).then(() => {
       expect(sm2.updateInstanceStats).toBeCalled()
+      done()
+    })
+  })
+})
+
+describe('notification fetch enabler', () => {
+  beforeEach(() => {
+    User.findOne = jest.fn()
+    User.findOne.mockResolvedValue(TEST_USER)
+  })
+
+  it('returns true when there are learning phase cards in the next hour', (done) => {
+    Instance.find = jest.fn()
+    Instance.find.mockResolvedValue([TEST_INSTANCE, TEST_INSTANCE])
+
+    Cards.checkForLearning(USERNAME).then((res) => {
+      expect(res).toBe(true)
+      done()
+    })
+  })
+
+  it('returns false when there are no learning phase cards in the next hour', (done) => {
+    Instance.find = jest.fn()
+    Instance.find.mockResolvedValue([])
+
+    Cards.checkForLearning(USERNAME).then((res) => {
+      expect(res).toBe(false)
       done()
     })
   })

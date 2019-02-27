@@ -51,6 +51,14 @@ router.get('/:user/random', (req, res) => {
   })
 })
 
+router.get('/:user/notification', (req, res) => {
+  const username = req.params.user
+
+  Cards.checkForLearning(username).then((enableFetch) => {
+    res.json({ enableFetch })
+  })
+})
+
 /** post response to card */
 router.post('/:user/card', (req, res, next) => {
   const username = req.params.user

@@ -190,3 +190,23 @@ export function deleteDeck(username, deck) {
       }
     })
 }
+
+/** check if given user is still in learning phase */
+export function checkForLearning(username) {
+  return User.findOne({ username })
+    .then((user) => {
+      // check if any due within next hour have learning phase on
+      const nextHour = new Date()
+      nextHour.setHours(nextHour.getHours() + 1)
+
+      return Instance
+        .find({ nextDate: { $lt: nextHour }, learningCount: { $gt: -1 } })
+        .then((cards) => {
+          console.log(`learning phase cards due in the next hour are: ${cards}`)
+          return cards.length > 0
+        })
+        .catch((err) => {
+          handleError(err, 500)
+        })
+    })
+}
