@@ -202,7 +202,7 @@ export function checkForLearning(username) {
       return Instance
         .find({ nextDate: { $lt: nextHour }, learningCount: { $gt: -1 } })
         .then((cards) => {
-          console.log(`learning phase cards due in the next hour are: ${cards}`)
+          // console.log(`learning phase cards due in the next hour are: ${cards}`)
           return cards.length > 0
         })
         .catch((err) => {
