@@ -12,10 +12,12 @@ router.post('/', (req, res, next) => {
     .then((user) => {
       res.json({ user })
     }).catch((err) => {
+      // return 400 if duplicate
       if (err.code === 11000) {
         res.status(400).send({
           error: 'duplicate user',
         })
+      // otherwise just send the full error to the client
       } else {
         next(err)
       }
@@ -24,12 +26,17 @@ router.post('/', (req, res, next) => {
 
 /** get user info */
 router.get('/:user', (req, res, next) => {
-  const { username } = req.body
+  const username = req.params.user
 
   Users.getUser(username).then((user) => {
-    res.json({ user })
+    if (user === null) {
+      res.status(400).send({
+        error: 'user does not exist',
+      })
+    } else {
+      res.json({ user })
+    }
   }).catch((err) => {
-    console.log(err)
     next(err)
   })
 })
