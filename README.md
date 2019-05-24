@@ -58,3 +58,5 @@ All routes are at {url}/api
         + performanceRating (integer) - currently [0,5]
     - POST */deck/:deckName* - start deck in user history
     - DELETE */deck/:deckName* - removes deck from user history
+## Todo
+* Anki import 

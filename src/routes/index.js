@@ -5,21 +5,32 @@ import * as Users from '../controllers/user-controller'
 const router = Router()
 
 /** add new user */
-router.post('/', (req, res) => {
+router.post('/', (req, res, next) => {
   const { username } = req.body
 
   Users.createNewUser(username)
     .then((user) => {
       res.json({ user })
+    }).catch((err) => {
+      if (err.code === 11000) {
+        res.status(400).send({
+          error: 'duplicate user',
+        })
+      } else {
+        next(err)
+      }
     })
 })
 
 /** get user info */
-router.get('/:user', (req, res) => {
+router.get('/:user', (req, res, next) => {
   const { username } = req.body
 
   Users.getUser(username).then((user) => {
     res.json({ user })
+  }).catch((err) => {
+    console.log(err)
+    next(err)
   })
 })
 

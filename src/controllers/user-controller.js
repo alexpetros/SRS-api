@@ -8,9 +8,6 @@ export const createNewUser = (username) => {
   const newUser = new User({ username })
 
   return newUser.save()
-    .catch((err) => {
-      handleError(err)
-    })
 }
 
 export const getUser = (username) => {
