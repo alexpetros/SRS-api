@@ -7,6 +7,7 @@ import csv from 'fast-csv'
 
 import * as Cards from '../controllers/card-controller'
 import * as Users from '../controllers/user-controller'
+import * as Decks from '../controllers/deck-controller'
 
 const router = Router()
 
@@ -122,21 +123,45 @@ router.delete('/:user/deck/:deckName', (req, res, next) => {
     .catch(next)
 })
 
+
+
 /** upload deck csv */
 const upload = multer({ dest: 'tmp/' })
 const type = upload.single('file')
-router.post('/:user/newdeck/:deckname/csv', type, (req, res) => {
+
+router.post('/:user/newdeck/:deckname/csv', type, (req, res, next) => {
+  const deckName = req.params.deckname
+
   // build rows as array
   const fileRows = []
   csv.fromPath(req.file.path).on('data', (data) => {
     fileRows.push(data)
   }).on('end', () => {
-    console.log(fileRows)
     // remove temp file
     fs.unlinkSync(req.file.path)
-    // do some stuff with fileRows here (add them to a deck!)
 
-    res.sendStatus(200)
+    // create an array of cards in proper format
+    const deck = fileRows.map((row) => {
+      return {
+        content: row[0],
+        answer: row[1],
+        deck: deckName,
+      }
+    })
+
+    Decks.createNewDeck(deck, deckName).then(() => {
+      res.sendStatus(200)
+    }).catch((err) => {
+      // return 400 if the deck already exits
+      if (err.code === 400) {
+        res.status(400).send({
+          error: err.message,
+        })
+      // otherwise just send the full error to the client
+      } else {
+        next(err)
+      }
+    })
   })
 })
 
