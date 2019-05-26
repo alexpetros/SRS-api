@@ -1,4 +1,10 @@
 import { Router } from 'express'
+import fs from 'fs'
+// import http from 'http'
+import multer from 'multer'
+import csv from 'fast-csv'
+
+
 import * as Cards from '../controllers/card-controller'
 import * as Users from '../controllers/user-controller'
 
@@ -114,6 +120,24 @@ router.delete('/:user/deck/:deckName', (req, res, next) => {
       res.sendStatus(200)
     })
     .catch(next)
+})
+
+/** upload deck csv */
+const upload = multer({ dest: 'tmp/' })
+const type = upload.single('file')
+router.post('/:user/newdeck/:deckname/csv', type, (req, res) => {
+  // build rows as array
+  const fileRows = []
+  csv.fromPath(req.file.path).on('data', (data) => {
+    fileRows.push(data)
+  }).on('end', () => {
+    console.log(fileRows)
+    // remove temp file
+    fs.unlinkSync(req.file.path)
+    // do some stuff with fileRows here (add them to a deck!)
+
+    res.sendStatus(200)
+  })
 })
 
 export default router
