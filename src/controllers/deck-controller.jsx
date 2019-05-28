@@ -24,7 +24,7 @@ export function createNewDeck(user, deck, deckName) {
  * would break users that subscribe to the deck
  */
 export function deleteUserCreatedDeck(user, deckName) {
-  getDeckCreator(deckName).then((deckCreator) => {
+  return getDeckCreator(deckName).then((deckCreator) => {
     if (user === deckCreator) {
       return Card.deleteMany({ deck: deckName })
     } else {
