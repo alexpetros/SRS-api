@@ -61,6 +61,10 @@ export function getNextCard(username) {
         .sort({ nextDate: 1 })
     })
     .then((instance) => {
+      if (instance === null) {
+        return null
+      }
+
       if (instance.nextDate > new Date()) {
         return null
       } else {
@@ -87,6 +91,10 @@ export function getXCardAfter(username, limit) {
         .limit(limit)
     })
     .then((instances) => {
+      if (instances.length === 0) {
+        return null
+      }
+
       const instance = instances[instances.length - 1]
       const { cardId, nextDate } = instance
 
