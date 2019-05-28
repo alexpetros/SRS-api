@@ -117,7 +117,9 @@ router.delete('/:user/deck/:deckName', (req, res, next) => {
 
   Cards.deleteDeck(user, deckName)
     .then(() => {
-      res.sendStatus(200)
+      Decks.deleteUserCreatedDeck(user, deckName).then(() => {
+        res.sendStatus(200)
+      })
     })
     .catch(next)
 })
@@ -145,10 +147,10 @@ router.post('/:user/newdeck/:deckname/csv', type, (req, res, next) => {
         content: row[0],
         answer: row[1],
         deck: deckname,
+        deckUploader: user,
       }
     })
 
-    console.log(deck)
     Decks.createNewDeck(user, deck, deckname)
       .then(() => {
         res.sendStatus(200)

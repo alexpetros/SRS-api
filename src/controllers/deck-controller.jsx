@@ -1,5 +1,5 @@
 import Card from '../models/card'
-import { startNewDeck } from './card-controller'
+import { startNewDeck, getDeckCreator } from './card-controller'
 
 
 /** add new cards for deck */
@@ -23,6 +23,12 @@ export function createNewDeck(user, deck, deckName) {
  * delete every card associated with a deck - use only be used in dev
  * would break users that subscribe to the deck
  */
-export function deleteDeck(deckName) {
-  return Card.deleteMany({ deck: deckName })
+export function deleteUserCreatedDeck(user, deckName) {
+  getDeckCreator(deckName).then((deckCreator) => {
+    if (user === deckCreator) {
+      return Card.deleteMany({ deck: deckName })
+    } else {
+      return true
+    }
+  })
 }

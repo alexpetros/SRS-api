@@ -210,3 +210,9 @@ export function checkForLearning(username) {
         })
     })
 }
+
+export function getDeckCreator(deckName) {
+  return Card.findOne({ deck: deckName }).then((card) => {
+    return card.deckUploader
+  })
+}
