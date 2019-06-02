@@ -10,11 +10,35 @@ import * as Decks from '../controllers/deck-controller'
 
 const router = Router()
 
-/** add new user */
-router.post('/', (req, res, next) => {
-  const { username } = req.body
+/** signin */
+router.post('/signin', (req, res, next) => {
+  const { username, reqPassword } = req.body
 
-  Users.createNewUser(username)
+  Users.getUser(username).then((user) => {
+    const actualPassword = user.password
+
+    if (user === null) {
+      res.status(400).send({
+        error: 'user does not exist',
+      })
+    } else if (actualPassword !== reqPassword) {
+      res.status(401).send({
+        error: 'invalid login',
+      })
+    } else {
+      res.json({ user })
+    }
+  }).catch((err) => {
+    next(err)
+  })
+})
+
+
+/** add new user */
+router.post('/signup', (req, res, next) => {
+  const { username, password } = req.body
+
+  Users.createNewUser(username, password)
     .then((user) => {
       res.json({ user })
     }).catch((err) => {
